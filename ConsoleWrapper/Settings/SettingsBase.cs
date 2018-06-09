@@ -1,11 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ConsoleWrapper.Settings
 {
-    public class SettingsBase
+    public abstract class SettingsBase
     {
+        private bool _isLocked;
+
+        internal SettingsBase() => _isLocked = false;
+
+        /// <summary>
+        /// Locks this settings instance so that no property may be changed
+        /// </summary>
+        public void Lock() => _isLocked = true;
+
         /// <summary>
         /// Safely sets the value of a property
         /// </summary>
@@ -14,6 +21,8 @@ namespace ConsoleWrapper.Settings
         /// <param name="container"></param>
         protected void SetValue<T>(T value, ref T container)
         {
+            if (_isLocked)
+                throw new InvalidOperationException("This settings instance is locked and may not be changed!");
             if (value.Equals(null))
                 throw new ArgumentNullException(nameof(value));
             if (!value.Equals(container))

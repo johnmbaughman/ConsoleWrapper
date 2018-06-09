@@ -33,6 +33,7 @@ namespace ConsoleWrapper
                 FileName = ExecutableLocation,
                 Arguments = args,
                 UseShellExecute = false,
+                CreateNoWindow = Settings.CreateNoWindow,
                 RedirectStandardError = Settings.RedirectStandardError,
                 RedirectStandardInput = Settings.RedirectStandardInput,
                 RedirectStandardOutput = Settings.RedirectStandardOutput,
