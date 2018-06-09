@@ -22,6 +22,7 @@ namespace ConsoleWrapper
         {
             ExecutableLocation = executableLocation;
             Settings = settings;
+            Settings.Lock();
 
             _pipeHash = Guid.NewGuid().ToString();
             string args = startArgs + "-pipeHash " + _pipeHash;
