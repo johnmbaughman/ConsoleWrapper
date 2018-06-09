@@ -9,6 +9,7 @@ namespace ConsoleWrapper.Settings
         private bool _redirectStandardError;
         private bool _redirectStandardInput;
         private bool _redirectStandardOutput;
+        private bool _createNoWindow;
         private string _workingDirectory;
         private EncodingSettings _encodingSettings;
 
@@ -40,6 +41,16 @@ namespace ConsoleWrapper.Settings
         }
 
         /// <summary>
+        /// Defines whether the console app should show a window.
+        /// </summary>
+        /// <value>True to show no window</value>
+        public bool CreateNoWindow
+        {
+            get => _createNoWindow;
+            set => SetValue(value, ref _createNoWindow);
+        }
+
+        /// <summary>
         /// Gets or sets the working directory of the console app to be started
         /// </summary>
         public string WorkingDirectory
@@ -65,6 +76,7 @@ namespace ConsoleWrapper.Settings
             RedirectStandardError = true;
             RedirectStandardInput = true;
             RedirectStandardOutput = true;
+            CreateNoWindow = true;
             WorkingDirectory = Environment.CurrentDirectory;
             EncodingSettings = new EncodingSettings();
         }
