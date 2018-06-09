@@ -7,7 +7,6 @@ namespace ConsoleWrapper
     public class CWrapper
     {
         private readonly Process _wrappedProcess;
-        private readonly string _pipeHash;
 
         public string ExecutableLocation { get; protected set; }
         public WrapperSettings Settings { get; protected set; }
@@ -24,15 +23,12 @@ namespace ConsoleWrapper
             Settings = settings;
             Settings.Lock();
 
-            _pipeHash = Guid.NewGuid().ToString();
-            string args = startArgs + "-pipeHash " + _pipeHash;
-
             _wrappedProcess = new Process();
 
             ProcessStartInfo startInfo = new ProcessStartInfo()
             {
                 FileName = ExecutableLocation,
-                Arguments = args,
+                Arguments = startArgs,
                 UseShellExecute = false,
                 CreateNoWindow = Settings.CreateNoWindow,
                 RedirectStandardError = Settings.RedirectStandardError,
