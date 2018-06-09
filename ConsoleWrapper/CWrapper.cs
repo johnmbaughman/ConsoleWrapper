@@ -6,40 +6,39 @@ namespace ConsoleWrapper
 {
     public class CWrapper
     {
-        private Process _wrappedProcess;
-        private string _pipeHash;
-        private WrapperSettings _settings;
+        private readonly Process _wrappedProcess;
+        private readonly string _pipeHash;
+
+        public string ExecutableLocation { get; protected set; }
+        public WrapperSettings Settings { get; protected set; }
 
         public CWrapper(string executableLocation)
-        {
-            Initialise(executableLocation, null, new WrapperSettings());
-        }
+            : this (executableLocation, String.Empty) { }
 
         public CWrapper(string executableLocation, string startArgs)
-        {
-            Initialise(executableLocation, startArgs, new WrapperSettings());
-        }
+            : this(executableLocation, startArgs, new WrapperSettings()) { }
 
         public CWrapper(string executableLocation, string startArgs, WrapperSettings settings)
         {
-            Initialise(executableLocation, startArgs, settings);
-        }
+            ExecutableLocation = executableLocation;
+            Settings = settings;
 
-        private void Initialise(string location, string args, WrapperSettings settings)
-        {
             _pipeHash = Guid.NewGuid().ToString();
-            string arguments = args + "-pipeHash " + _pipeHash;
+            string args = startArgs + "-pipeHash " + _pipeHash;
 
             _wrappedProcess = new Process();
 
             ProcessStartInfo startInfo = new ProcessStartInfo()
             {
-                FileName = location,
-                Arguments = arguments,
+                FileName = ExecutableLocation,
+                Arguments = args,
                 UseShellExecute = false,
-                RedirectStandardError = _settings.RedirectStandardError,
-                RedirectStandardInput = _settings.RedirectStandardInput,
-                RedirectStandardOutput = _settings.RedirectStandardOutput
+                RedirectStandardError = Settings.RedirectStandardError,
+                RedirectStandardInput = Settings.RedirectStandardInput,
+                RedirectStandardOutput = Settings.RedirectStandardOutput,
+                WorkingDirectory = Settings.WorkingDirectory,
+                StandardErrorEncoding = Settings.EncodingSettings.StandardErrorEncoding,
+                StandardOutputEncoding = Settings.EncodingSettings.StandardOutputEncoding
             };
         }
     }
