@@ -2,16 +2,27 @@
 
 namespace ConsoleWrapper.Settings
 {
-    public abstract class SettingsBase
+    public abstract class SettingsBase : ISettings
     {
-        private bool _isLocked;
+        public bool IsLocked { get; protected set; }
 
-        internal SettingsBase() => _isLocked = false;
+        internal SettingsBase() => IsLocked = false;
 
         /// <summary>
         /// Locks this settings instance so that no property may be changed
         /// </summary>
-        public void Lock() => _isLocked = true;
+        /// <returns>The unlock key</returns>
+        public Guid Lock()
+        {
+            IsLocked = true;
+            return Guid.NewGuid();
+        }
+
+        /// <summary>
+        /// Unlocks this settings instance
+        /// </summary>
+        /// <param name="key">The key obtained when locking the instance, used to unlock it</param>
+        public void Unlock(Guid key) => IsLocked = false;
 
         /// <summary>
         /// Safely sets the value of a property
@@ -19,9 +30,9 @@ namespace ConsoleWrapper.Settings
         /// <typeparam name="T"></typeparam>
         /// <param name="value"></param>
         /// <param name="container"></param>
-        protected void SetValue<T>(T value, ref T container)
+        public void SetValue<T>(T value, ref T container)
         {
-            if (_isLocked)
+            if (IsLocked)
                 throw new InvalidOperationException("This settings instance is locked and may not be changed!");
             if (value.Equals(null))
                 throw new ArgumentNullException(nameof(value));
