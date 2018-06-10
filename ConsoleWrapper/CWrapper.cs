@@ -118,9 +118,12 @@ namespace ConsoleWrapper
                 EnableRaisingEvents = true
             };
 
-            _wrappedProcess.OutputDataReceived += (s, e) => OutputDataReceived?.Invoke(s, e);
-            _wrappedProcess.ErrorDataReceived += (s, e) => ErrorDataReceived?.Invoke(s, e);
-            _wrappedProcess.Exited += (s, e) => ConsoleAppExited?.Invoke(s, e);
+            if (Settings.UseStreams)
+            {
+                _wrappedProcess.OutputDataReceived += (s, e) => OutputDataReceived?.Invoke(s, e);
+                _wrappedProcess.ErrorDataReceived += (s, e) => ErrorDataReceived?.Invoke(s, e);
+                _wrappedProcess.Exited += (s, e) => ConsoleAppExited?.Invoke(s, e);
+            }
         }
 
         #endregion
@@ -135,8 +138,12 @@ namespace ConsoleWrapper
                 throw new InvalidOperationException("This CWrapper instance is already executing!");
 
             _wrappedProcess.Start();
-            _wrappedProcess.BeginErrorReadLine();
-            _wrappedProcess.BeginOutputReadLine();
+
+            if (Settings.UseStreams)
+            {
+                _wrappedProcess.BeginErrorReadLine();
+                _wrappedProcess.BeginOutputReadLine();
+            }
 
             AppDomain.CurrentDomain.DomainUnload += (s, e) =>
             {
