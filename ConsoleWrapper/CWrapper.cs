@@ -55,7 +55,7 @@ namespace ConsoleWrapper
         /// </summary>
         public WrapperSettings Settings { get; protected set; }
 
-        /// <summary>
+        /*/// <summary>
         /// The standard error stream for the console application
         /// </summary>
         public StreamReader StandardError
@@ -77,7 +77,7 @@ namespace ConsoleWrapper
         public StreamReader StandardOutput
         {
             get => _wrappedProcess.StandardOutput;
-        }
+        }*/
 
         #endregion
 
@@ -118,16 +118,14 @@ namespace ConsoleWrapper
                 EnableRaisingEvents = true
             };
 
-            if (Settings.UseStreams)
+            
+            _wrappedProcess.OutputDataReceived += (s, e) => OutputDataReceived?.Invoke(s, e);
+            _wrappedProcess.ErrorDataReceived += (s, e) => ErrorDataReceived?.Invoke(s, e);
+            _wrappedProcess.Exited += (s, e) =>
             {
-                _wrappedProcess.OutputDataReceived += (s, e) => OutputDataReceived?.Invoke(s, e);
-                _wrappedProcess.ErrorDataReceived += (s, e) => ErrorDataReceived?.Invoke(s, e);
-                _wrappedProcess.Exited += (s, e) =>
-                {
-                    Executing = false;
-                    ConsoleAppExited?.Invoke(s, e);
-                };
-            }
+                Executing = false;
+                ConsoleAppExited?.Invoke(s, e);
+            };
         }
         #endregion
 
@@ -142,11 +140,8 @@ namespace ConsoleWrapper
 
             _wrappedProcess.Start();
 
-            if (Settings.UseStreams)
-            {
-                _wrappedProcess.BeginErrorReadLine();
-                _wrappedProcess.BeginOutputReadLine();
-            }
+            _wrappedProcess.BeginErrorReadLine();
+            _wrappedProcess.BeginOutputReadLine();
 
             AppDomain.CurrentDomain.DomainUnload += (s, e) =>
             {
