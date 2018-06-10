@@ -4,12 +4,59 @@ using ConsoleWrapper.Settings;
 
 namespace ConsoleWrapper
 {
-    public class CWrapper
+    public class CWrapper : IDisposable
     {
-        private readonly Process _wrappedProcess;
+        #region Events
 
+        /// <summary>
+        /// Invoked when output data is received from the console application
+        /// </summary>
+        public DataReceivedEventHandler OutputDataReceived;
+
+        /// <summary>
+        /// Invoked when error data is received from the console application
+        /// </summary>
+        public DataReceivedEventHandler ErrorDataReceived;
+
+        /// <summary>
+        /// Invoked when the console application is exited
+        /// </summary>
+        public EventHandler ConsoleAppExited;
+
+        #endregion
+
+        #region Privates
+
+        private readonly Process _wrappedProcess;
+        private readonly string _startArgs;
+
+        #endregion
+
+        #region Publics
+
+        /// <summary>
+        /// Indicates whether or not this CWrapper instance is disposed
+        /// </summary>
+        public bool Disposed { get; protected set; }
+
+        /// <summary>
+        /// Indicates whether or not this CWrapper instance is executing
+        /// </summary>
+        public bool Executing { get; protected set; }
+
+        /// <summary>
+        /// The location of the executable that this CWrapper instance is using
+        /// </summary>
         public string ExecutableLocation { get; protected set; }
+
+        /// <summary>
+        /// The settings used by this CWrapper instance
+        /// </summary>
         public WrapperSettings Settings { get; protected set; }
+
+        #endregion
+
+        #region Ctors
 
         public CWrapper(string executableLocation)
             : this (executableLocation, String.Empty) { }
@@ -22,13 +69,22 @@ namespace ConsoleWrapper
             ExecutableLocation = executableLocation;
             Settings = settings;
             Settings.Lock();
+            _startArgs = startArgs;
+            Executing = false;
+            Disposed = false;
 
-            _wrappedProcess = new Process();
+            _wrappedProcess = new Process
+            {
+                EnableRaisingEvents = true
+            };
+            _wrappedProcess.OutputDataReceived += (s, e) => OutputDataReceived?.Invoke(s, e);
+            _wrappedProcess.ErrorDataReceived += (s, e) => ErrorDataReceived?.Invoke(s, e);
+            _wrappedProcess.Exited += (s, e) => ConsoleAppExited?.Invoke(s, e);
 
-            ProcessStartInfo startInfo = new ProcessStartInfo()
+            _wrappedProcess.StartInfo = new ProcessStartInfo()
             {
                 FileName = ExecutableLocation,
-                Arguments = startArgs,
+                Arguments = _startArgs,
                 UseShellExecute = false,
                 CreateNoWindow = Settings.CreateNoWindow,
                 RedirectStandardError = Settings.RedirectStandardError,
@@ -38,12 +94,22 @@ namespace ConsoleWrapper
                 StandardErrorEncoding = Settings.EncodingSettings.StandardErrorEncoding,
                 StandardOutputEncoding = Settings.EncodingSettings.StandardOutputEncoding
             };
+        }
 
-            _wrappedProcess = new Process()
-            {
-                StartInfo = startInfo,
-                EnableRaisingEvents = true,
-            };
+        #endregion
+
+        /// <summary>
+        /// Executes the console application
+        /// </summary>
+        public void Execute()
+        {
+            CheckDisposed();
+            if (Executing)
+                throw new InvalidOperationException("This CWrapper instance is already executing!");
+
+            _wrappedProcess.Start();
+            _wrappedProcess.BeginErrorReadLine();
+            _wrappedProcess.BeginOutputReadLine();
 
             AppDomain.CurrentDomain.DomainUnload += (s, e) =>
             {
@@ -60,6 +126,73 @@ namespace ConsoleWrapper
                 _wrappedProcess.Kill();
                 _wrappedProcess.WaitForExit();
             };
+
+            Executing = true;
+        }
+
+        /// <summary>
+        /// Kills the console application that this CWrapper instance is executing
+        /// </summary>
+        public void Kill()
+        {
+            CheckDisposed();
+            if (!Executing)
+                throw new InvalidOperationException("This CWrapper instance is not executing!");
+
+            Executing = false;
+            _wrappedProcess.Kill();
+            _wrappedProcess.WaitForExit();
+        }
+
+        /// <summary>
+        /// Writes data to the console application that this CWrapper instance is executing
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data">The data to write to the console</param>
+        public void WriteToConsole(string data)
+        {
+            CheckDisposed();
+            if (!Executing)
+                throw new InvalidOperationException("This CWrapper instance is not executing!");
+            _wrappedProcess.StandardInput.Write(data);
+        }
+
+        /// <summary>
+        /// Disposes of this CWrapper instance
+        /// </summary>
+        /// <param name="killChild">If true, will kill the console application that this CWrapper instance is executing</param>
+        public void Dispose(bool killChild)
+        {
+            CheckDisposed();
+            if (killChild)
+                TryKill();
+            Dispose();
+        }
+
+        /// <summary>
+        /// Disposes of this CWrapper instance
+        /// </summary>
+        public void Dispose()
+        {
+            CheckDisposed();
+            _wrappedProcess.Dispose();
+            Disposed = true;
+        }
+
+        private void CheckDisposed()
+        {
+            if (Disposed)
+                throw new InvalidOperationException("This CWrapper instance is disposed!");
+        }
+
+        private void TryKill()
+        {
+            if (!Disposed && Executing)
+            {
+                Executing = false;
+                _wrappedProcess.Kill();
+                _wrappedProcess.WaitForExit();
+            }
         }
     }
 }
