@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using ConsoleWrapper.Settings;
 
 namespace ConsoleWrapper
@@ -54,6 +55,30 @@ namespace ConsoleWrapper
         /// </summary>
         public WrapperSettings Settings { get; protected set; }
 
+        /// <summary>
+        /// The standard error stream for the console application
+        /// </summary>
+        public StreamReader StandardError
+        {
+            get => _wrappedProcess.StandardError;
+        }
+
+        /// <summary>
+        /// The standard input stream for the console application
+        /// </summary>
+        public StreamWriter StandardInput
+        {
+            get => _wrappedProcess.StandardInput;
+        }
+
+        /// <summary>
+        /// The standard output stream for the console application
+        /// </summary>
+        public StreamReader StandardOutput
+        {
+            get => _wrappedProcess.StandardOutput;
+        }
+
         #endregion
 
         #region Ctors
@@ -73,15 +98,7 @@ namespace ConsoleWrapper
             Executing = false;
             Disposed = false;
 
-            _wrappedProcess = new Process
-            {
-                EnableRaisingEvents = true
-            };
-            _wrappedProcess.OutputDataReceived += (s, e) => OutputDataReceived?.Invoke(s, e);
-            _wrappedProcess.ErrorDataReceived += (s, e) => ErrorDataReceived?.Invoke(s, e);
-            _wrappedProcess.Exited += (s, e) => ConsoleAppExited?.Invoke(s, e);
-
-            _wrappedProcess.StartInfo = new ProcessStartInfo()
+            ProcessStartInfo startInfo = new ProcessStartInfo()
             {
                 FileName = ExecutableLocation,
                 Arguments = _startArgs,
@@ -94,6 +111,16 @@ namespace ConsoleWrapper
                 StandardErrorEncoding = Settings.EncodingSettings.StandardErrorEncoding,
                 StandardOutputEncoding = Settings.EncodingSettings.StandardOutputEncoding
             };
+
+            _wrappedProcess = new Process
+            {
+                StartInfo = startInfo,
+                EnableRaisingEvents = true
+            };
+
+            _wrappedProcess.OutputDataReceived += (s, e) => OutputDataReceived?.Invoke(s, e);
+            _wrappedProcess.ErrorDataReceived += (s, e) => ErrorDataReceived?.Invoke(s, e);
+            _wrappedProcess.Exited += (s, e) => ConsoleAppExited?.Invoke(s, e);
         }
 
         #endregion
