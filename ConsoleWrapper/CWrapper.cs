@@ -140,18 +140,27 @@ namespace ConsoleWrapper
 
             AppDomain.CurrentDomain.DomainUnload += (s, e) =>
             {
-                _wrappedProcess.Kill();
-                _wrappedProcess.WaitForExit();
+                if (Executing)
+                {
+                    _wrappedProcess.Kill();
+                    _wrappedProcess.WaitForExit();
+                }
             };
             AppDomain.CurrentDomain.ProcessExit += (s, e) =>
             {
-                _wrappedProcess.Kill();
-                _wrappedProcess.WaitForExit();
+                if (Executing)
+                {
+                    _wrappedProcess.Kill();
+                    _wrappedProcess.WaitForExit();
+                }
             };
             AppDomain.CurrentDomain.UnhandledException += (s, e) =>
             {
-                _wrappedProcess.Kill();
-                _wrappedProcess.WaitForExit();
+                if (Executing)
+                {
+                    _wrappedProcess.Kill();
+                    _wrappedProcess.WaitForExit();
+                }
             };
 
             Executing = true;
