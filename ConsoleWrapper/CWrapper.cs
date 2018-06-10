@@ -4,24 +4,24 @@ using ConsoleWrapper.Settings;
 
 namespace ConsoleWrapper
 {
-    public class CWrapper : IDisposable
+    public class CWrapper : ICWrapper
     {
         #region Events
 
         /// <summary>
         /// Invoked when output data is received from the console application
         /// </summary>
-        public DataReceivedEventHandler OutputDataReceived;
+        public event DataReceivedEventHandler OutputDataReceived;
 
         /// <summary>
         /// Invoked when error data is received from the console application
         /// </summary>
-        public DataReceivedEventHandler ErrorDataReceived;
+        public event DataReceivedEventHandler ErrorDataReceived;
 
         /// <summary>
         /// Invoked when the console application is exited
         /// </summary>
-        public EventHandler ConsoleAppExited;
+        public event EventHandler ConsoleAppExited;
 
         #endregion
 
