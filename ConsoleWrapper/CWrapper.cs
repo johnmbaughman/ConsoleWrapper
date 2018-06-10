@@ -122,10 +122,13 @@ namespace ConsoleWrapper
             {
                 _wrappedProcess.OutputDataReceived += (s, e) => OutputDataReceived?.Invoke(s, e);
                 _wrappedProcess.ErrorDataReceived += (s, e) => ErrorDataReceived?.Invoke(s, e);
-                _wrappedProcess.Exited += (s, e) => ConsoleAppExited?.Invoke(s, e);
+                _wrappedProcess.Exited += (s, e) =>
+                {
+                    Executing = false;
+                    ConsoleAppExited?.Invoke(s, e);
+                };
             }
         }
-
         #endregion
 
         /// <summary>
