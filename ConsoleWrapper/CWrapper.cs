@@ -181,6 +181,8 @@ namespace ConsoleWrapper
                 throw new InvalidOperationException("This CWrapper instance is not executing!");
 
             Executing = false;
+            _wrappedProcess.CancelErrorRead();
+            _wrappedProcess.CancelOutputRead();
             _wrappedProcess.Kill();
             _wrappedProcess.WaitForExit();
         }
