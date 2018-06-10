@@ -7,6 +7,7 @@ namespace ConsoleWrapper.Settings
     public class EncodingSettings : SettingsBase
     {
         private Encoding _stdErrEncoding;
+        private Encoding _stdInEncoding;
         private Encoding _stdOutEncoding;
 
         /// <summary>
@@ -16,6 +17,15 @@ namespace ConsoleWrapper.Settings
         {
             get => _stdErrEncoding;
             set => SetValue(value, ref _stdErrEncoding);
+        }
+
+        /// <summary>
+        /// The encoding to use for the standard error stream
+        /// </summary>
+        public Encoding StandardInputEncoding
+        {
+            get => _stdInEncoding;
+            set => SetValue(value, ref _stdInEncoding);
         }
 
         /// <summary>
@@ -30,12 +40,14 @@ namespace ConsoleWrapper.Settings
         public EncodingSettings()
         {
             StandardErrorEncoding = Console.OutputEncoding;
+            StandardInputEncoding = Console.InputEncoding;
             StandardOutputEncoding = Console.OutputEncoding;
         }
 
-        public EncodingSettings(Encoding standardErrorEncoding, Encoding standardOutputEncoding)
+        public EncodingSettings(Encoding standardErrorEncoding, Encoding standardInputEncoding, Encoding standardOutputEncoding)
         {
             StandardErrorEncoding = standardErrorEncoding;
+            StandardInputEncoding = standardInputEncoding;
             StandardOutputEncoding = standardOutputEncoding;
         }
     }

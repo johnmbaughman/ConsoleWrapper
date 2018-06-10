@@ -38,6 +38,28 @@ namespace ConsoleWrapper
                 StandardErrorEncoding = Settings.EncodingSettings.StandardErrorEncoding,
                 StandardOutputEncoding = Settings.EncodingSettings.StandardOutputEncoding
             };
+
+            _wrappedProcess = new Process()
+            {
+                StartInfo = startInfo,
+                EnableRaisingEvents = true,
+            };
+
+            AppDomain.CurrentDomain.DomainUnload += (s, e) =>
+            {
+                _wrappedProcess.Kill();
+                _wrappedProcess.WaitForExit();
+            };
+            AppDomain.CurrentDomain.ProcessExit += (s, e) =>
+            {
+                _wrappedProcess.Kill();
+                _wrappedProcess.WaitForExit();
+            };
+            AppDomain.CurrentDomain.UnhandledException += (s, e) =>
+            {
+                _wrappedProcess.Kill();
+                _wrappedProcess.WaitForExit();
+            };
         }
     }
 }
