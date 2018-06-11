@@ -211,6 +211,24 @@ namespace ConsoleWrapper
         }
 
         /// <summary>
+        /// Tries to kill this CWrapper instance
+        /// </summary>
+        /// <returns>True if the process was killed</returns>
+        public bool TryKill()
+        {
+            if (!Disposed && Executing)
+            {
+                Executing = false;
+                _wrappedProcess.Kill();
+                _wrappedProcess.WaitForExit();
+                return true;
+            } else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Disposes of this CWrapper instance
         /// </summary>
         /// <param name="killChild">If true, will kill the console application that this CWrapper instance is executing</param>
@@ -229,6 +247,12 @@ namespace ConsoleWrapper
         {
             CheckDisposed();
             TryKill();
+
+            ErrorDataReceived = null;
+            Exited = null;
+            Killed = null;
+            OutputDataReceived = null;
+
             _wrappedProcess.Dispose();
             Disposed = true;
         }
@@ -237,16 +261,6 @@ namespace ConsoleWrapper
         {
             if (Disposed)
                 throw new InvalidOperationException("This CWrapper instance is disposed!");
-        }
-
-        private void TryKill()
-        {
-            if (!Disposed && Executing)
-            {
-                Executing = false;
-                _wrappedProcess.Kill();
-                _wrappedProcess.WaitForExit();
-            }
         }
     }
 }

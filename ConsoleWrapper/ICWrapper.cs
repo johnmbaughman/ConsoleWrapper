@@ -18,6 +18,7 @@ namespace ConsoleWrapper
 
         void Execute();
         void Kill();
+        void TryKill();
         void WriteToConsole(string data);
     }
 }

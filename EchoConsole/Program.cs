@@ -21,7 +21,7 @@ namespace EchoConsole
             }
 
             while (true)
-                Console.WriteLine(Console.ReadLine());
+                Console.WriteLine("Bob");
         }
     }
 }
