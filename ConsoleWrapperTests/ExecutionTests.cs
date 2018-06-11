@@ -79,11 +79,11 @@ namespace ConsoleWrapperTests
         [Fact]
         public void TestExitEventFired()
         {
-            using (CWrapper wrapper = new CWrapper(Constants.ECHO_CONSOLE_LOCATION, EchoConsole.Program.EXIT_KEY))
+            using (CWrapper wrapper = new CWrapper(Constants.ECHO_CONSOLE_LOCATION))
             {
                 bool eventFired = false;
                 wrapper.Exited += (s, e) => eventFired = true;
-                wrapper.Execute();
+                wrapper.Execute(EchoConsole.Program.EXIT_KEY);
                 wrapper.Kill();
                 Assert.True(eventFired);
             }

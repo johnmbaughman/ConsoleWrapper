@@ -31,7 +31,6 @@ namespace ConsoleWrapper
         #region Privates
 
         private readonly Process _wrappedProcess;
-        private readonly string _startArgs;
 
         #endregion
 
@@ -86,12 +85,9 @@ namespace ConsoleWrapper
         #region Ctors
 
         public CWrapper(string executableLocation)
-            : this (executableLocation, String.Empty) { }
+            : this (executableLocation, new WrapperSettings()) { }
 
-        public CWrapper(string executableLocation, string startArgs)
-            : this(executableLocation, startArgs, new WrapperSettings()) { }
-
-        public CWrapper(string executableLocation, string startArgs, WrapperSettings settings)
+        public CWrapper(string executableLocation, WrapperSettings settings)
         {
             if (!File.Exists(executableLocation))
                 throw new ArgumentException("No executable exists at the specified location!", nameof(executableLocation));
@@ -99,7 +95,6 @@ namespace ConsoleWrapper
             ExecutableLocation = executableLocation;
             Settings = settings ?? new WrapperSettings();
             Settings.Lock();
-            _startArgs = startArgs;
 
             Executing = false;
             Disposed = false;
@@ -107,7 +102,6 @@ namespace ConsoleWrapper
             ProcessStartInfo startInfo = new ProcessStartInfo()
             {
                 FileName = ExecutableLocation,
-                Arguments = _startArgs,
                 UseShellExecute = false,
                 CreateNoWindow = Settings.CreateNoWindow,
                 RedirectStandardError = Settings.RedirectStandardError,
@@ -137,12 +131,14 @@ namespace ConsoleWrapper
         /// <summary>
         /// Executes the console application
         /// </summary>
-        public void Execute()
+        /// <param name="startArgs">The arguments passed when starting the console application</param>
+        public void Execute(string startArgs = null)
         {
             CheckDisposed();
             if (Executing)
                 throw new InvalidOperationException("This CWrapper instance is already executing!");
 
+            _wrappedProcess.StartInfo.Arguments = startArgs;
             _wrappedProcess.Start();
 
             _wrappedProcess.BeginErrorReadLine();

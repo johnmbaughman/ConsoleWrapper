@@ -16,9 +16,9 @@ namespace ConsoleWrapper
         string ExecutableLocation { get; }
         WrapperSettings Settings { get; }
 
-        void Execute();
+        void Execute(string startArgs);
         void Kill();
-        void TryKill();
+        bool TryKill();
         void WriteToConsole(string data);
     }
 }
