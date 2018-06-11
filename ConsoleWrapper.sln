@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleWrapper", "ConsoleWr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleWrapperTests", "ConsoleWrapperTests\ConsoleWrapperTests.csproj", "{537F5129-7243-4247-A93E-ACB225FE04FB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EchoConsole", "EchoConsole\EchoConsole.csproj", "{CEC9E813-4E58-4524-A23E-30CCB207D57C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{537F5129-7243-4247-A93E-ACB225FE04FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{537F5129-7243-4247-A93E-ACB225FE04FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{537F5129-7243-4247-A93E-ACB225FE04FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CEC9E813-4E58-4524-A23E-30CCB207D57C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEC9E813-4E58-4524-A23E-30CCB207D57C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEC9E813-4E58-4524-A23E-30CCB207D57C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEC9E813-4E58-4524-A23E-30CCB207D57C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

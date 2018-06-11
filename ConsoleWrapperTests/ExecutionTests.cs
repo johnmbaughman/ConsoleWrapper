@@ -3,7 +3,7 @@ using Xunit;
 
 namespace ConsoleWrapperTests
 {
-    public class UnitTest1
+    public class ExecutionTests
     {
         [Fact]
         public void Test1()
