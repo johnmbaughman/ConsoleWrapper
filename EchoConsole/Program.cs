@@ -34,12 +34,18 @@ namespace EchoConsole
                             Console.WriteLine("ping");
                     default:
                         while (true)
-                            Console.WriteLine(Console.ReadLine());
+                        {
+                            string data = Console.ReadLine();
+                            Console.WriteLine(data);
+                        }
                 }
             } else
             {
                 while (true)
-                    Console.WriteLine(Console.ReadLine());
+                {
+                    string data = Console.ReadLine();
+                    Console.WriteLine(data);
+                }
             }
         }
     }

@@ -248,10 +248,16 @@ namespace ConsoleWrapper
         {
             if (!Disposed && Executing)
             {
-                Executing = false;
-                _wrappedProcess.Kill();
-                _wrappedProcess.WaitForExit();
-                return true;
+                try
+                {
+                    Executing = false;
+                    _wrappedProcess.Kill();
+                    _wrappedProcess.WaitForExit();
+                    return true;
+                } catch
+                {
+                    return false;
+                }
             } else
             {
                 return false;
