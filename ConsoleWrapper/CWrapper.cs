@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using ConsoleWrapper.Settings;
 
 namespace ConsoleWrapper
@@ -15,16 +16,39 @@ namespace ConsoleWrapper
         public event DataReceivedEventHandler OutputDataReceived;
 
         /// <summary>
+        /// Set when data is received from the console application
+        /// </summary>
+        public ManualResetEventSlim OutputDataMRE = new ManualResetEventSlim(false);
+
+        /// <summary>
         /// Invoked when error data is received from the console application
         /// </summary>
         public event DataReceivedEventHandler ErrorDataReceived;
+
+        /// <summary>
+        /// Set when error data is received from the console application
+        /// </summary>
+        public ManualResetEventSlim ErrorDataMRE = new ManualResetEventSlim(false);
 
         /// <summary>
         /// Invoked when the console application is exited
         /// </summary>
         public event EventHandler Exited;
 
+        /// <summary>
+        /// Set when the console application exits
+        /// </summary>
+        public ManualResetEventSlim ExitedMRE = new ManualResetEventSlim(false);
+
+        /// <summary>
+        /// Invoked when this CWrapper instance kills the child console app
+        /// </summary>
         public event EventHandler Killed;
+
+        /// <summary>
+        /// Set when the console application is killed
+        /// </summary>
+        public ManualResetEventSlim KilledMRE = new ManualResetEventSlim(false);
 
         #endregion
 
@@ -118,11 +142,20 @@ namespace ConsoleWrapper
                 EnableRaisingEvents = true
             };
 
-            _wrappedProcess.OutputDataReceived += (s, e) => OutputDataReceived?.Invoke(s, e);
-            _wrappedProcess.ErrorDataReceived += (s, e) => ErrorDataReceived?.Invoke(s, e);
+            _wrappedProcess.OutputDataReceived += (s, e) =>
+            {
+                OutputDataMRE.Set();
+                OutputDataReceived?.Invoke(s, e);
+            };
+            _wrappedProcess.ErrorDataReceived += (s, e) =>
+            {
+                ErrorDataMRE.Set();
+                ErrorDataReceived?.Invoke(s, e);
+            };
             _wrappedProcess.Exited += (s, e) =>
             {
                 Executing = false;
+                ErrorDataMRE.Set();
                 Exited?.Invoke(s, e);
             };
         }
@@ -187,6 +220,7 @@ namespace ConsoleWrapper
             _wrappedProcess.Kill();
             _wrappedProcess.WaitForExit();
 
+            KilledMRE.Set();
             Killed?.Invoke(this, EventArgs.Empty);
         }
 
@@ -237,7 +271,7 @@ namespace ConsoleWrapper
         }*/
 
         /// <summary>
-        /// Disposes of this CWrapper instance
+        /// Disposes of this CWrapper instance. Note that this will also kill the child process
         /// </summary>
         public void Dispose()
         {
