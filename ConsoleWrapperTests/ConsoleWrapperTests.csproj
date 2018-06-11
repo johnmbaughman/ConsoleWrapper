@@ -4,6 +4,8 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
+
+    <AssemblyName>ConsoleWrapperTests</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,6 +13,17 @@
     <PackageReference Include="xunit" Version="2.3.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
     <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ConsoleWrapper\ConsoleWrapper.csproj" />
+    <ProjectReference Include="..\EchoConsole\EchoConsole.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="EchoConsole.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

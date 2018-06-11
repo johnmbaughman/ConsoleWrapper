@@ -22,7 +22,9 @@ namespace ConsoleWrapper
         /// <summary>
         /// Invoked when the console application is exited
         /// </summary>
-        public event EventHandler ConsoleAppExited;
+        public event EventHandler Exited;
+
+        public event EventHandler Killed;
 
         #endregion
 
@@ -91,10 +93,14 @@ namespace ConsoleWrapper
 
         public CWrapper(string executableLocation, string startArgs, WrapperSettings settings)
         {
+            if (!File.Exists(executableLocation))
+                throw new ArgumentException("No executable exists at the specified location!", nameof(executableLocation));
+
             ExecutableLocation = executableLocation;
-            Settings = settings;
+            Settings = settings ?? new WrapperSettings();
             Settings.Lock();
             _startArgs = startArgs;
+
             Executing = false;
             Disposed = false;
 
@@ -118,13 +124,12 @@ namespace ConsoleWrapper
                 EnableRaisingEvents = true
             };
 
-            
             _wrappedProcess.OutputDataReceived += (s, e) => OutputDataReceived?.Invoke(s, e);
             _wrappedProcess.ErrorDataReceived += (s, e) => ErrorDataReceived?.Invoke(s, e);
             _wrappedProcess.Exited += (s, e) =>
             {
                 Executing = false;
-                ConsoleAppExited?.Invoke(s, e);
+                Exited?.Invoke(s, e);
             };
         }
         #endregion
@@ -185,6 +190,8 @@ namespace ConsoleWrapper
             _wrappedProcess.CancelOutputRead();
             _wrappedProcess.Kill();
             _wrappedProcess.WaitForExit();
+
+            Killed?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -207,13 +214,13 @@ namespace ConsoleWrapper
         /// Disposes of this CWrapper instance
         /// </summary>
         /// <param name="killChild">If true, will kill the console application that this CWrapper instance is executing</param>
-        public void Dispose(bool killChild)
+        /*public void Dispose(bool killChild)
         {
             CheckDisposed();
             if (killChild)
                 TryKill();
             Dispose();
-        }
+        }*/
 
         /// <summary>
         /// Disposes of this CWrapper instance
@@ -221,6 +228,7 @@ namespace ConsoleWrapper
         public void Dispose()
         {
             CheckDisposed();
+            TryKill();
             _wrappedProcess.Dispose();
             Disposed = true;
         }

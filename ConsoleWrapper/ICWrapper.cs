@@ -8,7 +8,8 @@ namespace ConsoleWrapper
     {
         event DataReceivedEventHandler OutputDataReceived;
         event DataReceivedEventHandler ErrorDataReceived;
-        event EventHandler ConsoleAppExited;
+        event EventHandler Exited;
+        event EventHandler Killed;
 
         bool Disposed { get; }
         bool Executing { get; }
