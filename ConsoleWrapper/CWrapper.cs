@@ -80,30 +80,6 @@ namespace ConsoleWrapper
         /// </summary>
         public WrapperSettings Settings { get; protected set; }
 
-        /*/// <summary>
-        /// The standard error stream for the console application
-        /// </summary>
-        public StreamReader StandardError
-        {
-            get => _wrappedProcess.StandardError;
-        }
-
-        /// <summary>
-        /// The standard input stream for the console application
-        /// </summary>
-        public StreamWriter StandardInput
-        {
-            get => _wrappedProcess.StandardInput;
-        }
-
-        /// <summary>
-        /// The standard output stream for the console application
-        /// </summary>
-        public StreamReader StandardOutput
-        {
-            get => _wrappedProcess.StandardOutput;
-        }*/
-
         #endregion
 
         #region Ctors
@@ -251,8 +227,13 @@ namespace ConsoleWrapper
                 try
                 {
                     Executing = false;
+                    _wrappedProcess.CancelErrorRead();
+                    _wrappedProcess.CancelOutputRead();
                     _wrappedProcess.Kill();
                     _wrappedProcess.WaitForExit();
+
+                    KilledMRE.Set();
+                    Killed?.Invoke(this, EventArgs.Empty);
                     return true;
                 } catch
                 {
@@ -265,22 +246,34 @@ namespace ConsoleWrapper
         }
 
         /// <summary>
-        /// Disposes of this CWrapper instance
+        /// Releases all resources used by the current instance of the <see cref="CWrapper"/> class
         /// </summary>
-        /// <param name="killChild">If true, will kill the console application that this CWrapper instance is executing</param>
-        /*public void Dispose(bool killChild)
+        /// <param name="killProcess">If true, the dispose method will try to kill the wrapped process</param>
+        /// <param name="killSuccess">True if the wrapper process was killed successfully</param>
+        public void Dispose(bool killProcess, out bool killSuccess)
         {
             CheckDisposed();
-            if (killChild)
-                TryKill();
-            Dispose();
-        }*/
+
+            if (killProcess)
+                killSuccess = TryKill();
+            else
+                killSuccess = false;
+
+            _wrappedProcess.Dispose();
+            OutputDataMRE.Dispose();
+            ErrorDataMRE.Dispose();
+            ExitedMRE.Dispose();
+            KilledMRE.Dispose();
+
+            Disposed = true;
+        }
 
         /// <summary>
-        /// Disposes of this CWrapper instance. Note that this will also kill the child process
+        /// Releases all resources used by the current instance of the <see cref="CWrapper"/> class
         /// </summary>
-        public void Dispose()
-        {
+        /// <remarks>This will kill the wrapped process</remarks>
+        public void Dispose() => Dispose(true, out bool success);
+        /*{
             CheckDisposed();
             TryKill();
 
@@ -291,7 +284,7 @@ namespace ConsoleWrapper
 
             _wrappedProcess.Dispose();
             Disposed = true;
-        }
+        }*/
 
         private void CheckDisposed()
         {
