@@ -1,5 +1,4 @@
 ﻿using ConsoleWrapper;
-using System;
 using Xunit;
 
 namespace ConsoleWrapperTests
@@ -14,7 +13,20 @@ namespace ConsoleWrapperTests
                 const string DATA = "This data shall be echoed";
 
                 wrapper.Execute();
+                wrapper.WriteToConsole(DATA);
                 wrapper.OutputDataMRE.Wait();
+                Assert.Equal(DATA, wrapper.OutputBuffer.ReadLine());
+            }
+        }
+
+        [Fact]
+        public void TestOutput()
+        {
+            using (CWrapper wrapper = new CWrapper(Constants.ECHO_CONSOLE_LOCATION))
+            {
+                wrapper.Execute(EchoConsole.Program.FLOOD_KEY);
+                wrapper.OutputDataMRE.Wait();
+                Assert.True(true);
             }
         }
     }

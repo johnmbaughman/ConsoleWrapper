@@ -13,7 +13,7 @@ namespace ConsoleWrapper
         /// <summary>
         /// Invoked when output data is received from the console application
         /// </summary>
-        public event DataReceivedEventHandler OutputDataReceived;
+        public event EventHandler<DataReceivedEventArgs> OutputDataReceived;
 
         /// <summary>
         /// Set when data is received from the console application
@@ -23,7 +23,7 @@ namespace ConsoleWrapper
         /// <summary>
         /// Invoked when error data is received from the console application
         /// </summary>
-        public event DataReceivedEventHandler ErrorDataReceived;
+        public event EventHandler<DataReceivedEventArgs> ErrorDataReceived;
 
         /// <summary>
         /// Set when error data is received from the console application
@@ -87,6 +87,16 @@ namespace ConsoleWrapper
         /// </summary>
         public BufferHandler BufferHandler { get; protected set; }
 
+        /// <summary>
+        /// Shortcut to <see cref="BufferHandler.OutputDataReader"/>
+        /// </summary>
+        public StreamReader OutputBuffer => BufferHandler.OutputDataReader;
+
+        /// <summary>
+        /// Shortcut to <see cref="BufferHandler.ErrorDataReader"/>
+        /// </summary>
+        public StreamReader ErrorBuffer => BufferHandler.ErrorDataReader;
+
         #endregion
 
         #region Ctors
@@ -130,16 +140,14 @@ namespace ConsoleWrapper
             _wrappedProcess.OutputDataReceived += (s, e) =>
             {
                 OutputDataReceived?.Invoke(s, e);
-                _outputDataWriter.WriteLine(e);
+                _outputDataWriter.WriteLine(e.Data);
                 OutputDataMRE.Set();
-                OutputDataMRE.Reset();
             };
             _wrappedProcess.ErrorDataReceived += (s, e) =>
             {
                 ErrorDataReceived?.Invoke(s, e);
-                _errorDataWriter.WriteLine(e);
+                _errorDataWriter.WriteLine(e.Data);
                 ErrorDataMRE.Set();
-                ErrorDataMRE.Reset();
             };
             _wrappedProcess.Exited += (s, e) =>
             {
@@ -234,9 +242,9 @@ namespace ConsoleWrapper
             if (!Executing)
                 throw new InvalidOperationException("This CWrapper instance is not executing!");
 
-            byte[] byteData = Settings.EncodingSettings.StandardInputEncoding.GetBytes(data);
-            //_wrappedProcess.StandardInput.Write(data);
-            _wrappedProcess.StandardInput.BaseStream.Write(byteData, 0, byteData.Length);
+            //byte[] byteData = Settings.EncodingSettings.StandardInputEncoding.GetBytes(data);
+            //_wrappedProcess.StandardInput.BaseStream.Write(byteData, 0, byteData.Length);
+            _wrappedProcess.StandardInput.WriteLine(data);
         }
 
         /// <summary>

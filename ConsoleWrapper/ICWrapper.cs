@@ -6,8 +6,8 @@ namespace ConsoleWrapper
 {
     public interface ICWrapper : IDisposable
     {
-        event DataReceivedEventHandler OutputDataReceived;
-        event DataReceivedEventHandler ErrorDataReceived;
+        event EventHandler<DataReceivedEventArgs> OutputDataReceived;
+        event EventHandler<DataReceivedEventArgs> ErrorDataReceived;
         event EventHandler<DateTime> Exited;
         event EventHandler Killed;
 
@@ -15,6 +15,7 @@ namespace ConsoleWrapper
         bool Executing { get; }
         string ExecutableLocation { get; }
         WrapperSettings Settings { get; }
+        BufferHandler BufferHandler { get; }
 
         void Execute(string startArgs);
         void Kill();

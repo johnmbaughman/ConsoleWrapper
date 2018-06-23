@@ -72,20 +72,21 @@ namespace ConsoleWrapperTests
                 wrapper.Killed += (s, e) => eventFired = true;
                 wrapper.Execute();
                 wrapper.Kill();
+                wrapper.KilledMRE.Wait();
                 Assert.True(eventFired);
             }
         }
 
         [Fact]
-        public void TestExitEventFired()
+        public void TestExitEvent()
         {
             using (CWrapper wrapper = new CWrapper(Constants.ECHO_CONSOLE_LOCATION))
             {
-                bool eventFired = false;
-                wrapper.Exited += (s, e) => eventFired = true;
+                DateTime exitTime = DateTime.MinValue;
+                wrapper.Exited += (s, e) => exitTime = e;
                 wrapper.Execute(EchoConsole.Program.EXIT_KEY);
-                wrapper.Kill();
-                Assert.True(eventFired);
+                wrapper.ExitedMRE.Wait();
+                Assert.True(exitTime.AddMilliseconds(10) > DateTime.Now);
             }
         }
     }
