@@ -120,19 +120,21 @@ namespace ConsoleWrapper
 
             _wrappedProcess.OutputDataReceived += (s, e) =>
             {
-                OutputDataMRE.Set();
                 OutputDataReceived?.Invoke(s, e);
+                OutputDataMRE.Set();
+                OutputDataMRE.Reset();
             };
             _wrappedProcess.ErrorDataReceived += (s, e) =>
             {
-                ErrorDataMRE.Set();
                 ErrorDataReceived?.Invoke(s, e);
+                ErrorDataMRE.Set();
+                ErrorDataMRE.Reset();
             };
             _wrappedProcess.Exited += (s, e) =>
             {
                 Executing = false;
-                ErrorDataMRE.Set();
                 Exited?.Invoke(s, e);
+                ExitedMRE.Set();
             };
         }
         #endregion
@@ -153,30 +155,9 @@ namespace ConsoleWrapper
             _wrappedProcess.BeginErrorReadLine();
             _wrappedProcess.BeginOutputReadLine();
 
-            AppDomain.CurrentDomain.DomainUnload += (s, e) =>
-            {
-                if (Executing)
-                {
-                    _wrappedProcess.Kill();
-                    _wrappedProcess.WaitForExit();
-                }
-            };
-            AppDomain.CurrentDomain.ProcessExit += (s, e) =>
-            {
-                if (Executing)
-                {
-                    _wrappedProcess.Kill();
-                    _wrappedProcess.WaitForExit();
-                }
-            };
-            AppDomain.CurrentDomain.UnhandledException += (s, e) =>
-            {
-                if (Executing)
-                {
-                    _wrappedProcess.Kill();
-                    _wrappedProcess.WaitForExit();
-                }
-            };
+            AppDomain.CurrentDomain.DomainUnload += (s, e) => Kill();
+            AppDomain.CurrentDomain.ProcessExit += (s, e) => Kill();
+            AppDomain.CurrentDomain.UnhandledException += (s, e) => Kill();
 
             Executing = true;
         }
@@ -201,22 +182,6 @@ namespace ConsoleWrapper
         }
 
         /// <summary>
-        /// Writes data to the console application that this CWrapper instance is executing
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="data">The data to write to the console</param>
-        public void WriteToConsole(string data)
-        {
-            CheckDisposed();
-            if (!Executing)
-                throw new InvalidOperationException("This CWrapper instance is not executing!");
-
-            byte[] byteData = Settings.EncodingSettings.StandardInputEncoding.GetBytes(data);
-            //_wrappedProcess.StandardInput.Write(data);
-            _wrappedProcess.StandardInput.BaseStream.Write(byteData, 0, byteData.Length);
-        }
-
-        /// <summary>
         /// Tries to kill this CWrapper instance
         /// </summary>
         /// <returns>True if the process was killed</returns>
@@ -235,14 +200,32 @@ namespace ConsoleWrapper
                     KilledMRE.Set();
                     Killed?.Invoke(this, EventArgs.Empty);
                     return true;
-                } catch
+                }
+                catch
                 {
                     return false;
                 }
-            } else
+            }
+            else
             {
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Writes data to the console application that this CWrapper instance is executing
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data">The data to write to the console</param>
+        public void WriteToConsole(string data)
+        {
+            CheckDisposed();
+            if (!Executing)
+                throw new InvalidOperationException("This CWrapper instance is not executing!");
+
+            byte[] byteData = Settings.EncodingSettings.StandardInputEncoding.GetBytes(data);
+            //_wrappedProcess.StandardInput.Write(data);
+            _wrappedProcess.StandardInput.BaseStream.Write(byteData, 0, byteData.Length);
         }
 
         /// <summary>
