@@ -124,10 +124,13 @@ namespace ConsoleWrapper
                 RedirectStandardError = Settings.RedirectStandardError,
                 RedirectStandardInput = Settings.RedirectStandardInput,
                 RedirectStandardOutput = Settings.RedirectStandardOutput,
-                WorkingDirectory = Settings.WorkingDirectory,
-                StandardErrorEncoding = Settings.EncodingSettings.StandardErrorEncoding,
-                StandardOutputEncoding = Settings.EncodingSettings.StandardOutputEncoding
+                WorkingDirectory = Settings.WorkingDirectory
             };
+
+            if (Settings.RedirectStandardOutput)
+                startInfo.StandardOutputEncoding = Settings.EncodingSettings.StandardOutputEncoding;
+            if (Settings.RedirectStandardError)
+                startInfo.StandardErrorEncoding = Settings.EncodingSettings.StandardErrorEncoding;
 
             BufferHandler = new BufferHandler(out _outputDataWriter, out _errorDataWriter);
 
@@ -171,8 +174,10 @@ namespace ConsoleWrapper
             _wrappedProcess.StartInfo.Arguments = startArgs;
             _wrappedProcess.Start();
 
-            _wrappedProcess.BeginErrorReadLine();
-            _wrappedProcess.BeginOutputReadLine();
+            if (Settings.RedirectStandardError)
+                _wrappedProcess.BeginErrorReadLine();
+            if (Settings.RedirectStandardOutput)
+                _wrappedProcess.BeginOutputReadLine();
 
             AppDomain.CurrentDomain.DomainUnload += (s, e) => Kill();
             AppDomain.CurrentDomain.ProcessExit += (s, e) => Kill();
