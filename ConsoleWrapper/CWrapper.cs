@@ -259,6 +259,10 @@ namespace ConsoleWrapper
             ExitedMRE.Dispose();
             KilledMRE.Dispose();
 
+            _outputDataWriter.Dispose();
+            _errorDataWriter.Dispose();
+            BufferHandler.Dispose();
+
             Disposed = true;
         }
 

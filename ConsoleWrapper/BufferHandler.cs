@@ -1,8 +1,9 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace ConsoleWrapper
 {
-    public class BufferHandler
+    public class BufferHandler : IDisposable
     {
         #region Privates
 
@@ -40,6 +41,17 @@ namespace ConsoleWrapper
 
             OutputDataReader = new StreamReader(_outputDataStream);
             ErrorDataReader = new StreamReader(_errorDataStream);
+        }
+
+        /// <summary>
+        /// Release all resources used by this instance of the <see cref="BufferHandler"/> class
+        /// </summary>
+        public void Dispose()
+        {
+            OutputDataReader.Dispose();
+            ErrorDataReader.Dispose();
+            _outputDataStream.Dispose();
+            _errorDataStream.Dispose();
         }
     }
 }
