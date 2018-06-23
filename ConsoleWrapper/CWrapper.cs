@@ -55,6 +55,8 @@ namespace ConsoleWrapper
         #region Privates
 
         private readonly Process _wrappedProcess;
+        private StreamWriter _outputDataWriter;
+        private StreamWriter _errorDataWriter;
 
         #endregion
 
@@ -79,6 +81,11 @@ namespace ConsoleWrapper
         /// The settings used by this CWrapper instance
         /// </summary>
         public WrapperSettings Settings { get; protected set; }
+
+        /// <summary>
+        /// Stores output and error data from the wrapper process
+        /// </summary>
+        public BufferHandler BufferHandler { get; protected set; }
 
         #endregion
 
@@ -112,6 +119,8 @@ namespace ConsoleWrapper
                 StandardOutputEncoding = Settings.EncodingSettings.StandardOutputEncoding
             };
 
+            BufferHandler = new BufferHandler(out _outputDataWriter, out _errorDataWriter);
+
             _wrappedProcess = new Process
             {
                 StartInfo = startInfo,
@@ -121,12 +130,14 @@ namespace ConsoleWrapper
             _wrappedProcess.OutputDataReceived += (s, e) =>
             {
                 OutputDataReceived?.Invoke(s, e);
+                _outputDataWriter.WriteLine(e);
                 OutputDataMRE.Set();
                 OutputDataMRE.Reset();
             };
             _wrappedProcess.ErrorDataReceived += (s, e) =>
             {
                 ErrorDataReceived?.Invoke(s, e);
+                _errorDataWriter.WriteLine(e);
                 ErrorDataMRE.Set();
                 ErrorDataMRE.Reset();
             };
