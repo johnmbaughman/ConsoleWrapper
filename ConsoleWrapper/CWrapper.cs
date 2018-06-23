@@ -33,7 +33,7 @@ namespace ConsoleWrapper
         /// <summary>
         /// Invoked when the console application is exited
         /// </summary>
-        public event EventHandler Exited;
+        public event EventHandler<DateTime> Exited;
 
         /// <summary>
         /// Set when the console application exits
@@ -133,7 +133,7 @@ namespace ConsoleWrapper
             _wrappedProcess.Exited += (s, e) =>
             {
                 Executing = false;
-                Exited?.Invoke(s, e);
+                Exited?.Invoke(s, DateTime.Now);
                 ExitedMRE.Set();
             };
         }

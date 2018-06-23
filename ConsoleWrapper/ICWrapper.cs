@@ -8,7 +8,7 @@ namespace ConsoleWrapper
     {
         event DataReceivedEventHandler OutputDataReceived;
         event DataReceivedEventHandler ErrorDataReceived;
-        event EventHandler Exited;
+        event EventHandler<DateTime> Exited;
         event EventHandler Killed;
 
         bool Disposed { get; }
