@@ -18,3 +18,6 @@ or this command into the Visual Studio Package Manager Console
 > Install-Package FalconEye36.ConsoleWrapper
 
 If you want to build from source, you can do that too.
+
+## Documentation
+See the [documentation pages](https://FalconEye36.github.io/ConsoleWrapper/)

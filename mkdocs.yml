@@ -10,8 +10,8 @@ theme:
   palette:
     primary: 'cyan'
     accent: 'cyan'
-  logo: 'img/icon.svg'
-  favicon: 'img/favicon.png'
+  #logo: 'img/icon.svg'
+  #favicon: 'img/favicon.png'
 
 repo_name: 'FalconEye36/ConsoleWrapper'
 repo_url: 'https://github.com/FalconEye36/ConsoleWrapper'
