@@ -1,0 +1,36 @@
+site_name: ConsoleWrapper Documentation
+site_description: Documentation for FalconEye36/ConsoleWrapper
+site_author: Carl Stephens
+
+pages:
+  - Home: index.md
+  
+theme:
+  name: 'material'
+  palette:
+    primary: 'cyan'
+    accent: 'cyan'
+  logo: 'img/icon.svg'
+  favicon: 'img/favicon.png'
+
+repo_name: 'FalconEye36/ConsoleWrapper'
+repo_url: 'https://github.com/FalconEye36/ConsoleWrapper'
+
+markdown_extensions:
+  - admonition
+  - codehilite:
+      guess_lang: false
+  - toc:
+      permalink: true
+  - pymdownx.emoji:
+      emoji_generator: !!python/name:pymdownx.emoji.to_svg
+      emoji_index: !!python/name:pymdownx.emoji.gemoji
+      options:
+        attributes:
+          height: 20px
+          width: 20px
+          align: absmiddle
+extra:
+  social:
+    - type: 'github'
+      link: 'https://github.com/FalconEye36'
