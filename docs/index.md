@@ -25,3 +25,15 @@ or this command into the Visual Studio Package Manager Console
 > Install-Package FalconEye36.ConsoleWrapper
 
 If you want to build from source, you can do that too.
+
+## Getting Started
+Using ConsoleWrapper is easy! All you really need to know is the location of an executable console application!
+
+```c#
+using (CWrapper wrapper = new CWrapper("Location of executable"))
+{
+	wrapper.Execute();
+	//Or
+	wrapper.Execute(string[] startArgs);
+}
+```
