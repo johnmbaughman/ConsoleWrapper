@@ -1,4 +1,5 @@
 ﻿using ConsoleWrapper;
+using ConsoleWrapper.Settings;
 using Xunit;
 
 namespace ConsoleWrapperTests
@@ -26,7 +27,7 @@ namespace ConsoleWrapperTests
             {
                 wrapper.Execute(EchoConsole.Program.FLOOD_KEY);
                 wrapper.OutputDataMRE.Wait();
-                Assert.True(true);
+                Assert.Equal("ping", wrapper.OutputBuffer.ReadLine());
             }
         }
     }
