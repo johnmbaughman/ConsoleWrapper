@@ -6,7 +6,6 @@ ConsoleWrapper is a wrapper for console applications, allowing them to be run he
 * Redirection (or not, if you prefer) of IO streams, with optional encoding choice
 * Notification (events + manual reset events) of important events
 * Buffer handler for output and error streams
-* ~~Fully~~Mostly unit tested :wink:
 
 ## Installation
 To install ConsoleWrapper, simply add the [nuget package](https://www.nuget.org/packages/FalconEye36.ConsoleWrapper) with your favourite package manager. Alternatively, paste this command into the nuget command line:
@@ -21,3 +20,7 @@ If you want to build from source, you can do that too.
 
 ## Documentation
 See the [documentation pages](https://FalconEye36.github.io/ConsoleWrapper/)
+
+
+## Known Issues
+Unit tests involving IO fail. I have not yet figured out how to solve this, however through my own testing of IO-related functions I have encountered no issues.
