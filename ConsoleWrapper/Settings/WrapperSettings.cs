@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ConsoleWrapper.Settings
 {
@@ -12,7 +10,6 @@ namespace ConsoleWrapper.Settings
         private bool _createNoWindow;
         private string _workingDirectory;
         private EncodingSettings _encodingSettings;
-        //private bool _useStreams;
 
         /// <summary>
         /// Defines whether the standard input stream of the console app should be redirected
@@ -69,15 +66,6 @@ namespace ConsoleWrapper.Settings
             set => SetValue(value, ref _encodingSettings);
         }
 
-        /*/// <summary>
-        /// Defines whether the CWrapper should use events or expose streams for data output
-        /// </summary>
-        public bool UseStreams
-        {
-            get => _useStreams;
-            set => SetValue(value, ref _useStreams);
-        }*/
-
         /// <summary>
         /// Settings for the console wrapper
         /// </summary>
@@ -89,7 +77,6 @@ namespace ConsoleWrapper.Settings
             CreateNoWindow = true;
             WorkingDirectory = Environment.CurrentDirectory;
             EncodingSettings = new EncodingSettings();
-            //UseStreams = false;
         }
     }
 }

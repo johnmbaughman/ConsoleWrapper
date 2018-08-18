@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace ConsoleWrapper.Settings
@@ -7,7 +6,6 @@ namespace ConsoleWrapper.Settings
     public class EncodingSettings : SettingsBase
     {
         private Encoding _stdErrEncoding;
-        private Encoding _stdInEncoding;
         private Encoding _stdOutEncoding;
 
         /// <summary>
@@ -20,15 +18,6 @@ namespace ConsoleWrapper.Settings
         }
 
         /// <summary>
-        /// The encoding to use for the standard error stream
-        /// </summary>
-        public Encoding StandardInputEncoding
-        {
-            get => _stdInEncoding;
-            set => SetValue(value, ref _stdInEncoding);
-        }
-
-        /// <summary>
         /// The encoding to use for the standard output stream
         /// </summary>
         public Encoding StandardOutputEncoding
@@ -38,16 +27,13 @@ namespace ConsoleWrapper.Settings
         }
 
         public EncodingSettings()
+            : this(Console.OutputEncoding, Console.OutputEncoding)
         {
-            StandardErrorEncoding = Console.OutputEncoding;
-            StandardInputEncoding = Console.InputEncoding;
-            StandardOutputEncoding = Console.OutputEncoding;
         }
 
-        public EncodingSettings(Encoding standardErrorEncoding, Encoding standardInputEncoding, Encoding standardOutputEncoding)
+        public EncodingSettings(Encoding standardErrorEncoding, Encoding standardOutputEncoding)
         {
             StandardErrorEncoding = standardErrorEncoding;
-            StandardInputEncoding = standardInputEncoding;
             StandardOutputEncoding = standardOutputEncoding;
         }
     }

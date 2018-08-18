@@ -246,9 +246,6 @@ namespace ConsoleWrapper
             CheckDisposed();
             if (!Executing)
                 throw new InvalidOperationException("This CWrapper instance is not executing!");
-
-            //byte[] byteData = Settings.EncodingSettings.StandardInputEncoding.GetBytes(data);
-            //_wrappedProcess.StandardInput.BaseStream.Write(byteData, 0, byteData.Length);
             _wrappedProcess.StandardInput.WriteLine(data);
         }
 
