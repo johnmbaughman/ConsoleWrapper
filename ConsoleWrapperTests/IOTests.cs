@@ -1,5 +1,4 @@
 ﻿using ConsoleWrapper;
-using ConsoleWrapper.Settings;
 using Xunit;
 
 namespace ConsoleWrapperTests
