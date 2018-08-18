@@ -19,7 +19,7 @@ or this command into the Visual Studio Package Manager Console
 If you want to build from source, you can do that too.
 
 ## Documentation
-See the [documentation pages](https://FalconEye36.github.io/ConsoleWrapper/)
+See the [wiki pages](https://github.com/FalconEye36/ConsoleWrapper/wiki)
 
 
 ## Known Issues
