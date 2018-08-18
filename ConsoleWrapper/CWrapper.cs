@@ -55,8 +55,8 @@ namespace ConsoleWrapper
         #region Privates
 
         private readonly Process _wrappedProcess;
-        private StreamWriter _outputDataWriter;
-        private StreamWriter _errorDataWriter;
+        private readonly StreamWriter _outputDataWriter;
+        private readonly StreamWriter _errorDataWriter;
 
         #endregion
 
