@@ -19,7 +19,7 @@ or this command into the Visual Studio Package Manager Console
 If you want to build from source, you can do that too.
 
 ## Documentation
-See the [wiki pages](https://github.com/FalconEye36/ConsoleWrapper/wiki)
+See the [wiki pages](https://github.com/carlst99/ConsoleWrapper/wiki)
 
 
 ## Known Issues
