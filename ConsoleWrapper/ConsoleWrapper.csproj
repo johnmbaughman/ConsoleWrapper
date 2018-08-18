@@ -10,7 +10,7 @@
     <PackageId>FalconEye36.ConsoleWrapper</PackageId>
     <AssemblyVersion>1.0.1.0</AssemblyVersion>
     <FileVersion>1.0.1.0</FileVersion>
-    <Version>1.0.4-beta</Version>
+    <Version>1.0.5</Version>
     <PackageLicenseUrl>https://github.com/FalconEye36/ConsoleWrapper/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/FalconEye36/ConsoleWrapper</PackageProjectUrl>
     <RepositoryUrl>https://github.com/FalconEye36/ConsoleWrapper</RepositoryUrl>
