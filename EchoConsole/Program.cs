@@ -39,7 +39,8 @@ namespace EchoConsole
                             Console.WriteLine(data);
                         }
                 }
-            } else
+            }
+            else
             {
                 while (true)
                 {
