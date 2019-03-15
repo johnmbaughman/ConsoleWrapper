@@ -8,19 +8,15 @@ ConsoleWrapper is a wrapper for console applications, allowing them to be run he
 * Buffer handler for output and error streams
 
 ## Installation
-To install ConsoleWrapper, simply add the [nuget package](https://www.nuget.org/packages/FalconEye36.ConsoleWrapper) with your favourite package manager. Alternatively, paste this command into the nuget command line:
+To install ConsoleWrapper, simply add the [nuget package](https://www.nuget.org/packages/carlst99.ConsoleWrapper/) with your favourite package manager. Alternatively, paste this command into the nuget command line:
 
-> nuget install FalconEye36.ConsoleWrapper
+> nuget install carlst99.ConsoleWrapper
 
 or this command into the Visual Studio Package Manager Console
 
-> Install-Package FalconEye36.ConsoleWrapper
+> Install-Package carlst99.ConsoleWrapper
 
 If you want to build from source, you can do that too.
 
 ## Documentation
 See the [wiki pages](https://github.com/carlst99/ConsoleWrapper/wiki)
-
-
-## Known Issues
-Unit tests involving IO fail. I have not yet figured out how to solve this, however through my own testing of IO-related functions I have encountered no issues.
