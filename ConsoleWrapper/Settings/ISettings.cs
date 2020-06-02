@@ -6,8 +6,8 @@ namespace ConsoleWrapper.Settings
     {
         bool IsLocked { get; }
 
-        Guid Lock();
-        void Unlock(Guid key);
-        void SetValue<T>(T value, ref T container);
+        void Lock();
+        void Unlock();
+        void SetProperty<T>(ref T container, T value);
     }
 }

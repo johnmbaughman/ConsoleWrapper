@@ -5,14 +5,16 @@ namespace ConsoleWrapper
 {
     public class BufferHandler : IDisposable
     {
-        #region Privates
+        #region Fields
 
         private readonly MemoryStream _outputDataStream;
         private readonly MemoryStream _errorDataStream;
 
+        private bool _isDisposed;
+
         #endregion
 
-        #region Publics
+        #region Properties
 
         /// <summary>
         /// Reads data from the output stream
@@ -48,10 +50,24 @@ namespace ConsoleWrapper
         /// </summary>
         public void Dispose()
         {
-            OutputDataReader.Dispose();
-            ErrorDataReader.Dispose();
-            _outputDataStream.Dispose();
-            _errorDataStream.Dispose();
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_isDisposed)
+            {
+                if (disposing)
+                {
+                    OutputDataReader.Dispose();
+                    ErrorDataReader.Dispose();
+                    _outputDataStream.Dispose();
+                    _errorDataStream.Dispose();
+                }
+
+                _isDisposed = true;
+            }
         }
     }
 }

@@ -14,7 +14,7 @@ namespace ConsoleWrapper.Settings
         public Encoding StandardErrorEncoding
         {
             get => _stdErrEncoding;
-            set => SetValue(value, ref _stdErrEncoding);
+            set => SetProperty(ref _stdErrEncoding, value);
         }
 
         /// <summary>
@@ -23,7 +23,7 @@ namespace ConsoleWrapper.Settings
         public Encoding StandardOutputEncoding
         {
             get => _stdOutEncoding;
-            set => SetValue(value, ref _stdOutEncoding);
+            set => SetProperty(ref _stdOutEncoding, value);
         }
 
         public EncodingSettings()

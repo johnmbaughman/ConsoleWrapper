@@ -7,63 +7,72 @@ namespace ConsoleWrapper.Settings
         private bool _redirectStandardError;
         private bool _redirectStandardInput;
         private bool _redirectStandardOutput;
-        private bool _createNoWindow;
+        private bool _showWindow;
         private string _workingDirectory;
+        private bool _useBufferHandler;
         private EncodingSettings _encodingSettings;
 
         /// <summary>
-        /// Defines whether the standard input stream of the console app should be redirected
+        /// Defines whether the standard error stream of the executable should be redirected to the <see cref="BufferHandler"/>
         /// </summary>
         public bool RedirectStandardError
         {
             get => _redirectStandardError;
-            set => SetValue(value, ref _redirectStandardError);
+            set => SetProperty(ref _redirectStandardError, value);
         }
 
         /// <summary>
-        /// Defines whether the standard input stream of the console app should be redirected
+        /// Defines whether the standard input stream of the executable should be redirected to the <see cref="ICWrapper"/>
         /// </summary>
         public bool RedirectStandardInput
         {
             get => _redirectStandardInput;
-            set => SetValue(value, ref _redirectStandardInput);
+            set => SetProperty(ref _redirectStandardInput, value);
         }
 
         /// <summary>
-        /// Defines whether the standard output stream of the console app should be redirected
+        /// Defines whether the standard output stream of the executable should be redirected to the <see cref="BufferHandler"/>
         /// </summary>
         public bool RedirectStandardOutput
         {
             get => _redirectStandardOutput;
-            set => SetValue(value, ref _redirectStandardOutput);
+            set => SetProperty(ref _redirectStandardOutput, value);
         }
 
         /// <summary>
         /// Defines whether the console app should show a window.
         /// </summary>
-        /// <value>True to show no window</value>
-        public bool CreateNoWindow
+        public bool ShowWindow
         {
-            get => _createNoWindow;
-            set => SetValue(value, ref _createNoWindow);
+            get => _showWindow;
+            set => SetProperty(ref _showWindow, value);
         }
 
         /// <summary>
-        /// Gets or sets the working directory of the console app to be started
+        /// Gets or sets the working directory of the executable
         /// </summary>
         public string WorkingDirectory
         {
             get => _workingDirectory;
-            set => SetValue(value, ref _workingDirectory);
+            set => SetProperty(ref _workingDirectory, value);
         }
 
         /// <summary>
-        /// Gets or sets the encoding settings for the console app to be started
+        /// Defines whether or not an <see cref="ICWrapper"/> should make use of a <see cref="BufferHandler"/>
+        /// </summary>
+        public bool UseBufferHandler
+        {
+            get => _useBufferHandler;
+            set => SetProperty(ref _useBufferHandler, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the encoding settings to be used
         /// </summary>
         public EncodingSettings EncodingSettings
         {
             get => _encodingSettings;
-            set => SetValue(value, ref _encodingSettings);
+            set => SetProperty(ref _encodingSettings, value);
         }
 
         /// <summary>
@@ -74,8 +83,9 @@ namespace ConsoleWrapper.Settings
             RedirectStandardError = true;
             RedirectStandardInput = true;
             RedirectStandardOutput = true;
-            CreateNoWindow = true;
+            ShowWindow = true;
             WorkingDirectory = Environment.CurrentDirectory;
+            UseBufferHandler = true;
             EncodingSettings = new EncodingSettings();
         }
     }
