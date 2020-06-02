@@ -1,5 +1,5 @@
 # ConsoleWrapper
-ConsoleWrapper is a wrapper for console applications, allowing them to be run headlessly with redirected IO. In other words, ConsoleWrapper provides all the implementation for starting a headless console, redirecting its standard input, output and error streams, and managing the process. And of course, all of this is customisable. Want a window? No problem. Change the IO encoding? You can do that too.
+ConsoleWrapper allows starting a headless console, redirecting its standard input, output and error streams, and managing the process. And of course, all of this is customisable. Want a window? No problem. Change the IO encoding? You can do that too.
 
 ## Features
 * Management of console process
