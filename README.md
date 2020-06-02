@@ -1,14 +1,14 @@
 # ConsoleWrapper
-ConsoleWrapper allows starting a headless console, redirecting its standard input, output and error streams, and managing the process. And of course, all of this is customisable. Want a window? No problem. Change the IO encoding? You can do that too.
+ConsoleWrapper allows starting a command-line executable, redirecting its standard input, output and error streams, and managing the process. And of course, all of this is customisable. Want a window? No problem. Change the IO encoding? You can do that too.
 
 ## Features
-* Management of console process
+* Management of executable process
 * Redirection (or not, if you prefer) of IO streams, with optional encoding choice
 * Notification (events + manual reset events) of important events
 * Buffer handler for output and error streams
 
 ## Installation
-To install ConsoleWrapper, simply add the [nuget package](https://www.nuget.org/packages/carlst99.ConsoleWrapper/) with your favourite package manager. Alternatively, paste this command into the nuget command line:
+To install ConsoleWrapper, add the [nuget package](https://www.nuget.org/packages/carlst99.ConsoleWrapper/) to your project. Alternatively, paste this command into the nuget command line:
 
 > nuget install carlst99.ConsoleWrapper
 
