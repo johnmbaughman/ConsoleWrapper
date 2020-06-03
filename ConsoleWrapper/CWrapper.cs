@@ -11,8 +11,7 @@ namespace ConsoleWrapper
         #region Fields
 
         private readonly Process _wrappedProcess;
-        private readonly StreamWriter _outputDataWriter;
-        private readonly StreamWriter _errorDataWriter;
+        private readonly BufferHandler _bufferHandler;
 
         #endregion
 
@@ -31,14 +30,24 @@ namespace ConsoleWrapper
         /// <summary>
         /// The location of the executable
         /// </summary>
-        public string ExecutableLocation { get; protected set; }
+        public string Executable { get; protected set; }
 
         public WrapperSettings Settings { get; protected set; }
 
         /// <summary>
-        /// Stores output and error data from the wrapper process. Depending on the value of <see cref="WrapperSettings.UseBufferHandler"/>, this property may return null
+        /// Gets the standard output of the executable. You must have enabled <see cref="WrapperSettings.RedirectStandardOutput"/> to use this
         /// </summary>
-        public BufferHandler BufferHandler { get; protected set; }
+        public StreamReader StandardOutput { get; protected set; }
+
+        /// <summary>
+        /// Gets the standard output of the executable. You must have enabled <see cref="WrapperSettings.RedirectStandardError"/> to use this
+        /// </summary>
+        public StreamReader StandardError { get; protected set; }
+
+        /// <summary>
+        /// Gets the standard output of the executable. You must have enabled <see cref="WrapperSettings.RedirectStandardInput"/> to use this
+        /// </summary>
+        public StreamWriter StandardInput { get; protected set; }
 
         #endregion
 
@@ -50,7 +59,7 @@ namespace ConsoleWrapper
         public event EventHandler<DataReceivedEventArgs> OutputDataReceived;
 
         /// <summary>
-        /// Set when data is received from the console application
+        /// Set when data is received from the executable, given that a <see cref="BufferHandler"/> has been provided
         /// </summary>
         public ManualResetEventSlim OutputDataMRE = new ManualResetEventSlim(false);
 
@@ -60,7 +69,7 @@ namespace ConsoleWrapper
         public event EventHandler<DataReceivedEventArgs> ErrorDataReceived;
 
         /// <summary>
-        /// Set when error data is received from the console application
+        /// Set when error data is received from the executable, given that a <see cref="BufferHandler"/> has been provided
         /// </summary>
         public ManualResetEventSlim ErrorDataMRE = new ManualResetEventSlim(false);
 
@@ -88,23 +97,27 @@ namespace ConsoleWrapper
 
         #region Ctors
 
-        public CWrapper(string executableLocation)
-            : this (executableLocation, new WrapperSettings()) { }
+        public CWrapper(string executable)
+            : this (executable, new WrapperSettings()) { }
 
-        public CWrapper(string executableLocation, WrapperSettings settings)
+        public CWrapper(string executable, WrapperSettings settings)
+            : this (executable, settings, null) { }
+
+        public CWrapper(string executable, WrapperSettings settings, BufferHandler bufferHandler)
         {
-            if (!File.Exists(executableLocation))
-                throw new ArgumentException("No executable exists at the specified location", nameof(executableLocation));
+            if (!File.Exists(executable))
+                throw new ArgumentException("No executable exists at the specified location", nameof(executable));
             Settings = settings ?? throw new ArgumentNullException(nameof(settings));
 
-            ExecutableLocation = executableLocation;
+            _bufferHandler = bufferHandler;
+            Executable = executable;
             Settings.Lock();
 
             ProcessStartInfo startInfo = new ProcessStartInfo()
             {
-                FileName = ExecutableLocation,
+                FileName = Executable,
                 UseShellExecute = false,
-                CreateNoWindow = Settings.ShowWindow,
+                CreateNoWindow = !Settings.ShowWindow,
                 RedirectStandardError = Settings.RedirectStandardError,
                 RedirectStandardInput = Settings.RedirectStandardInput,
                 RedirectStandardOutput = Settings.RedirectStandardOutput,
@@ -112,9 +125,6 @@ namespace ConsoleWrapper
                 StandardErrorEncoding = Settings.EncodingSettings.StandardErrorEncoding,
                 WorkingDirectory = Settings.WorkingDirectory
             };
-
-            if (Settings.UseBufferHandler)
-                BufferHandler = new BufferHandler(out _outputDataWriter, out _errorDataWriter);
 
             _wrappedProcess = new Process
             {
@@ -125,15 +135,15 @@ namespace ConsoleWrapper
             _wrappedProcess.OutputDataReceived += (s, e) =>
             {
                 OutputDataReceived?.Invoke(s, e);
-                if (Settings.UseBufferHandler)
-                    _outputDataWriter.WriteLine(e.Data);
+                if (_bufferHandler != null)
+                    _bufferHandler.OutputDataWriter.WriteLine(e.Data);
                 OutputDataMRE.Set();
             };
             _wrappedProcess.ErrorDataReceived += (s, e) =>
             {
                 ErrorDataReceived?.Invoke(s, e);
-                if (Settings.UseBufferHandler)
-                    _errorDataWriter.WriteLine(e.Data);
+                if (_bufferHandler != null)
+                    _bufferHandler.ErrorDataWriter.WriteLine(e.Data);
                 ErrorDataMRE.Set();
             };
             _wrappedProcess.Exited += (s, e) =>
@@ -159,14 +169,16 @@ namespace ConsoleWrapper
             _wrappedProcess.StartInfo.Arguments = startArgs;
             _wrappedProcess.Start();
 
+            StandardInput = _wrappedProcess.StandardInput;
+
             if (Settings.RedirectStandardError)
                 _wrappedProcess.BeginErrorReadLine();
             if (Settings.RedirectStandardOutput)
                 _wrappedProcess.BeginOutputReadLine();
 
-            AppDomain.CurrentDomain.DomainUnload += (s, e) => Kill();
-            AppDomain.CurrentDomain.ProcessExit += (s, e) => Kill();
-            AppDomain.CurrentDomain.UnhandledException += (s, e) => Kill();
+            AppDomain.CurrentDomain.DomainUnload += (s, e) => SafeKill();
+            AppDomain.CurrentDomain.ProcessExit += (s, e) => SafeKill();
+            AppDomain.CurrentDomain.UnhandledException += (s, e) => SafeKill();
 
             Executing = true;
         }
@@ -210,7 +222,7 @@ namespace ConsoleWrapper
         /// </summary>
         public void Dispose()
         {
-            Dispose(disposing: true);
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 
@@ -220,22 +232,23 @@ namespace ConsoleWrapper
             {
                 if (disposing)
                 {
-                    if (Executing)
-                        Kill();
+                    SafeKill();
                     _wrappedProcess.Dispose();
 
                     OutputDataMRE.Dispose();
                     ErrorDataMRE.Dispose();
                     ExitedMRE.Dispose();
                     KilledMRE.Dispose();
-
-                    _outputDataWriter?.Dispose();
-                    _errorDataWriter?.Dispose();
-                    BufferHandler?.Dispose();
                 }
 
                 Disposed = true;
             }
+        }
+
+        protected void SafeKill()
+        {
+            if (Executing)
+                Kill();
         }
 
         private void CheckDisposed()

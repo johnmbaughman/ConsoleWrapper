@@ -8,7 +8,6 @@ namespace ConsoleWrapperTests
     {
         private static readonly WrapperSettings REDIRECTED_SETTINGS = new WrapperSettings
         {
-            UseBufferHandler = false,
             RedirectStandardError = true,
             RedirectStandardInput = true,
             RedirectStandardOutput = true

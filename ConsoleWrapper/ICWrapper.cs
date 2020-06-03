@@ -21,14 +21,9 @@ namespace ConsoleWrapper
         /// <summary>
         /// The location of the executable
         /// </summary>
-        string ExecutableLocation { get; }
+        string Executable { get; }
 
         WrapperSettings Settings { get; }
-
-        /// <summary>
-        /// Stores output and error data from the wrapper process. Depending on the value of <see cref="WrapperSettings.UseBufferHandler"/>, this property may return null
-        /// </summary>
-        BufferHandler BufferHandler { get; }
 
         #endregion
 

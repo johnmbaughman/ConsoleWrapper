@@ -7,10 +7,10 @@
     <Description>Simplifies running console executables</Description>
     <PackageTags>console,wrapper,executable,redirection</PackageTags>
     <NeutralLanguage>en</NeutralLanguage>
-    <PackageId>ConsoleWrapper</PackageId>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
-    <Version>1.0.0</Version>
+    <PackageId>carlst99.ConsoleWrapper</PackageId>
+    <AssemblyVersion>1.0.1.0</AssemblyVersion>
+    <FileVersion>1.0.1.0</FileVersion>
+    <Version>1.0.1</Version>
     <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/carlst99/ConsoleWrapper</PackageProjectUrl>
     <RepositoryUrl>https://github.com/carlst99/ConsoleWrapper</RepositoryUrl>
@@ -18,7 +18,7 @@
     <Copyright>Carl Stephens © 2020</Copyright>
     <Company />
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageReleaseNotes>Minor API redesign</PackageReleaseNotes>
+    <PackageReleaseNotes>Major API redesign, bugfixes</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

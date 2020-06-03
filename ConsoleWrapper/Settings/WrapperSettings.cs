@@ -9,7 +9,6 @@ namespace ConsoleWrapper.Settings
         private bool _redirectStandardOutput;
         private bool _showWindow;
         private string _workingDirectory;
-        private bool _useBufferHandler;
         private EncodingSettings _encodingSettings;
 
         /// <summary>
@@ -58,15 +57,6 @@ namespace ConsoleWrapper.Settings
         }
 
         /// <summary>
-        /// Defines whether or not an <see cref="ICWrapper"/> should make use of a <see cref="BufferHandler"/>
-        /// </summary>
-        public bool UseBufferHandler
-        {
-            get => _useBufferHandler;
-            set => SetProperty(ref _useBufferHandler, value);
-        }
-
-        /// <summary>
         /// Gets or sets the encoding settings to be used
         /// </summary>
         public EncodingSettings EncodingSettings
@@ -83,9 +73,8 @@ namespace ConsoleWrapper.Settings
             RedirectStandardError = true;
             RedirectStandardInput = true;
             RedirectStandardOutput = true;
-            ShowWindow = true;
+            ShowWindow = false;
             WorkingDirectory = Environment.CurrentDirectory;
-            UseBufferHandler = true;
             EncodingSettings = new EncodingSettings();
         }
     }

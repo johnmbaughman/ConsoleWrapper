@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27703.2026
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30128.74
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleWrapper", "ConsoleWrapper\ConsoleWrapper.csproj", "{D134DB5B-3986-4B64-A962-D6EACF564703}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleWrapperTests", "ConsoleWrapperTests\ConsoleWrapperTests.csproj", "{537F5129-7243-4247-A93E-ACB225FE04FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EchoConsole", "EchoConsole\EchoConsole.csproj", "{FE03E9EF-57F7-4F93-B73D-69540ED290B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EchoConsole", "EchoConsole\EchoConsole.csproj", "{FE03E9EF-57F7-4F93-B73D-69540ED290B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsole", "TestConsole\TestConsole.csproj", "{EB7007E6-4D9B-4AB6-93E0-DABEE85A2341}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{FE03E9EF-57F7-4F93-B73D-69540ED290B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FE03E9EF-57F7-4F93-B73D-69540ED290B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FE03E9EF-57F7-4F93-B73D-69540ED290B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB7007E6-4D9B-4AB6-93E0-DABEE85A2341}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB7007E6-4D9B-4AB6-93E0-DABEE85A2341}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB7007E6-4D9B-4AB6-93E0-DABEE85A2341}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB7007E6-4D9B-4AB6-93E0-DABEE85A2341}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
