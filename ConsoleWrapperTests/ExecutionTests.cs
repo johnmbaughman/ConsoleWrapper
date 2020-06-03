@@ -26,15 +26,6 @@ namespace ConsoleWrapperTests
         }
 
         [Fact]
-        public void TestInvalidFilePath()
-        {
-            Assert.Throws<ArgumentException>(() =>
-            {
-                CWrapper wrapper = new CWrapper("random location");
-            });
-        }
-
-        [Fact]
         public void TestInvalidKill()
         {
             using CWrapper wrapper = new CWrapper(Constants.ECHO_CONSOLE_LOCATION);

@@ -105,8 +105,6 @@ namespace ConsoleWrapper
 
         public CWrapper(string executable, WrapperSettings settings, BufferHandler bufferHandler)
         {
-            if (!File.Exists(executable))
-                throw new ArgumentException("No executable exists at the specified location", nameof(executable));
             Settings = settings ?? throw new ArgumentNullException(nameof(settings));
 
             _bufferHandler = bufferHandler;
